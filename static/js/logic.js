@@ -2,10 +2,10 @@
 var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 // Perform a GET request to the query URL
-d3.json(url, function(data) {
-  // Once we get a response, send the data.features object to the createFeatures function
-  createFeatures(data.features);
-});
+d3.json(url, (data) => {
+        // Once we get a response, send the data.features object to the createFeatures function
+        createFeatures(data.features);
+    });
 
 function createFeatures(earthquakeData) {
 
@@ -72,4 +72,33 @@ function createMap(earthquakes) {
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
-}
+
+// Set up the legend
+var legend = L.control({ position: "bottomright" });
+legend.onAdd = function() {
+  var div = L.DomUtil.create("div", "info legend");
+  var limits = geojson.options.limits;
+  var colors = geojson.options.colors;
+  var labels = [];
+
+  // Add min & max
+  var legendInfo = "<h1>Median Income</h1>" +
+    "<div class=\"labels\">" +
+      "<div class=\"min\">" + limits[0] + "</div>" +
+      "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+    "</div>";
+
+  div.innerHTML = legendInfo;
+
+  limits.forEach(function(limit, index) {
+    labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+  });
+
+  div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+  return div;
+};
+
+// Adding legend to the map
+legend.addTo(myMap);
+
+};
