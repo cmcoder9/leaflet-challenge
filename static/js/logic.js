@@ -75,11 +75,11 @@ function createMap(earthquakes) {
 
 // Set up the legend
 var legend = L.control({ position: "bottomright" });
-legend.onAdd = function() {
-  var div = L.DomUtil.create("div", "info legend");
-  var limits = geojson.options.limits;
-  var colors = geojson.options.colors;
-  var labels = [];
+legend.onAdd = function(myMap) {
+  let div = L.DomUtil.create("div", "info legend");
+    labels = ['<strong>Depths:</strong>'],
+    mag_categories = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
+    mag_categories_color = [10, 30, 50, 70, 90, 150]
 
   // Add min & max
   var legendInfo = "<h1>Median Income</h1>" +
