@@ -74,31 +74,27 @@ function createMap(earthquakes) {
   }).addTo(myMap);
 
 // Set up the legend
-var legend = L.control({ position: "bottomright" });
-legend.onAdd = function(myMap) {
-  let div = L.DomUtil.create("div", "info legend");
-    labels = ['<strong>Depths:</strong>'],
-    mag_categories = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
-    mag_categories_color = [10, 30, 50, 70, 90, 150]
+//var legend = L.control({ position: "bottomright" });
+//legend.onAdd = function(myMap) {
+  //let div = L.DomUtil.create("div", "info legend");
+    //labels = ['<strong>Depths:</strong>'],
+    //mag_categories = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
+    //mag_categories_color = [10, 30, 50, 70, 90, 150]
 
   // Add min & max
-  var legendInfo = "<h1>Median Income</h1>" +
-    "<div class=\"labels\">" +
-      "<div class=\"min\">" + limits[0] + "</div>" +
-      "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-    "</div>";
+  //var legendInfo = `<h1>Magnitude</h1><div class="labels"><div class="min">${limits[0]}</div><div class="max">${limits[limits.length - 1]}</div></div>`;
 
-  div.innerHTML = legendInfo;
+  //div.innerHTML = legendInfo;
 
-  limits.forEach(function(limit, index) {
-    labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-  });
+  //limits.forEach(function(mag_categories, mag_categories_color) {
+    //labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+  //});
 
-  div.innerHTML += "<ul>" + labels.join("") + "</ul>";
-  return div;
-};
+  //div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+  //return div;
+//};
 
 // Adding legend to the map
-legend.addTo(myMap);
+//legend.addTo(myMap);
 
 };
