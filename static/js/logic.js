@@ -21,11 +21,24 @@ function createFeatures(earthquakeData) {
   // Run the onEachFeature function once for each piece of data in the array
  
   function getColor(depth){
-    var color='green';
+    var color='';
     if (depth > 90) {
-      color = "red"
-    } else { 
-      color = 'green'
+      color = 'red'
+    } 
+    else if (depth <=90 + depth> 70) { 
+      color = 'OrangeRed'
+    } 
+    else if (depth <=70 + depth> 50) { 
+      color = 'DarkOrange'
+    }
+    else if (depth <=50 + depth> 30) { 
+      color = 'Orange'
+    }
+    else if (depth <=30 + depth> 10) { 
+        color = 'Yellow'
+    }
+    else {
+          color = 'LawnGreen'
     };
     return color
   };
