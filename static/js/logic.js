@@ -21,26 +21,26 @@ function createFeatures(earthquakeData) {
   // Run the onEachFeature function once for each piece of data in the array
  
   function getColor(depth){
-    var color='';
+    var fillColor='';
     if (depth > 90) {
-      color = 'red'
+      fillColor = 'red'
     } 
     else if (depth <=90 + depth> 70) { 
-      color = 'OrangeRed'
+        fillColor = 'OrangeRed'
     } 
     else if (depth <=70 + depth> 50) { 
-      color = 'DarkOrange'
+        fillColor = 'DarkOrange'
     }
     else if (depth <=50 + depth> 30) { 
-      color = 'Orange'
+        fillColor = 'Orange'
     }
     else if (depth <=30 + depth> 10) { 
-        color = 'Yellow'
+        fillColor = 'Yellow'
     }
     else {
-          color = 'LawnGreen'
+        fillColor = 'LawnGreen'
     };
-    return color
+    return fillColor
   };
  
   var earthquakes = L.geoJSON(earthquakeData, {
@@ -48,7 +48,10 @@ function createFeatures(earthquakeData) {
       return L.circleMarker(latlng);
     }, 
     style: function(feature) {
-      return {color: getColor(feature.geometry.coordinates[2])}
+      return {
+        fillOpacity: 0.75,
+        color:"DimGray",
+        fillColor: getColor(feature.geometry.coordinates[2])}
     }, 
     onEachFeature: onEachFeature
   });
