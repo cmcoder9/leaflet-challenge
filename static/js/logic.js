@@ -13,12 +13,30 @@ function createFeatures(earthquakeData) {
   // Give each feature a popup describing the place and time of the earthquake
   function onEachFeature(feature, layer) {
     layer.bindPopup("<h3>" + feature.properties.place +
-      "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
+      "</h3><hr><p>" + new Date(feature.properties.time) +
+      "</h3><hr><p>" + feature.properties.mag + "</p>");
   }
 
   // Create a GeoJSON layer containing the features array on the earthquakeData object
   // Run the onEachFeature function once for each piece of data in the array
+ 
+  function getColor(depth){
+    var color='green';
+    if (depth > 90) {
+      color = "red"
+    } else { 
+      color = 'green'
+    };
+    return color
+  };
+ 
   var earthquakes = L.geoJSON(earthquakeData, {
+    pointToLayer: function(feature, latlng) {
+      return L.circleMarker(latlng);
+    }, 
+    style: function(feature) {
+      return {color: getColor(feature.geometry.coordinates[2])}
+    }, 
     onEachFeature: onEachFeature
   });
 
@@ -59,10 +77,10 @@ function createMap(earthquakes) {
     Earthquakes: earthquakes
   };
 
-  // Create our map, giving it the streetmap and earthquakes layers to display on load
+  // Create our map, giving it earthquakes layers to display on load
   var myMap = L.map("mapid", {
     center: [45.52, -122.67],
-    zoom: 13,
+    zoom: 5,
     layers: [lightmap, earthquakes]
   });
 
@@ -74,27 +92,27 @@ function createMap(earthquakes) {
   }).addTo(myMap);
 
 // Set up the legend
-//var legend = L.control({ position: "bottomright" });
-//legend.onAdd = function(myMap) {
-  //let div = L.DomUtil.create("div", "info legend");
-    //labels = ['<strong>Depths:</strong>'],
-    //mag_categories = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
-    //mag_categories_color = [10, 30, 50, 70, 90, 150]
+var legend = L.control({ position: "bottomright" });
+legend.onAdd = function(myMap) {
+let div = L.DomUtil.create("div", "info legend");
+    labels = ['<strong>Depths:</strong>'],
+    mag_categories = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
+    mag_categories_color = [10, 30, 50, 70, 90, 150]
 
-  // Add min & max
-  //var legendInfo = `<h1>Magnitude</h1><div class="labels"><div class="min">${limits[0]}</div><div class="max">${limits[limits.length - 1]}</div></div>`;
+  //Add min & max
+  var legendInfo = `<h1>Magnitude</h1><div class="labels"><div class="min">${limits[0]}</div><div class="max">${limits[limits.length - 1]}</div></div>`;
 
-  //div.innerHTML = legendInfo;
+  div.innerHTML = legendInfo;
 
-  //limits.forEach(function(mag_categories, mag_categories_color) {
-    //labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-  //});
+  limits.forEach(function(mag_categories, mag_categories_color) {
+    labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+  });
 
-  //div.innerHTML += "<ul>" + labels.join("") + "</ul>";
-  //return div;
-//};
+  div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+  return div;
+};
 
 // Adding legend to the map
-//legend.addTo(myMap);
+legend.addTo(myMap);
 
 };
