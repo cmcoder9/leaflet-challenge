@@ -62,7 +62,7 @@ function createFeatures(earthquakeData) {
 
 function createMap(earthquakes) {
 
-  // Define streetmap and darkmap layers
+  // Define lightmap, darkmap, and layers
   var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
@@ -95,8 +95,8 @@ function createMap(earthquakes) {
 
   // Create our map, giving it earthquakes layers to display on load
   var myMap = L.map("mapid", {
-    center: [45.52, -122.67],
-    zoom: 5,
+    center: [15.5994, -28.6731],
+    zoom: 2.5,
     layers: [lightmap, earthquakes]
   });
 
