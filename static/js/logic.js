@@ -19,7 +19,7 @@ function createFeatures(earthquakeData) {
 
   // Create a GeoJSON layer containing the features array on the earthquakeData object
   // Run the onEachFeature function once for each piece of data in the array
- 
+  var depth_categories = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
   function getColor(depth){
     var fillColor='';
     if (depth > 90) {
@@ -69,20 +69,26 @@ function createMap(earthquakes) {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
     id: "light-v10",
-    accessToken: API_KEY
+    accessToken: API_KEY,
+
   });
+  
   var darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
     id: "dark-v10",
-    accessToken: API_KEY
+    accessToken: API_KEY,
+    
   });
+  
   var satellite = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
     id: "satellite-v9",
-    accessToken: API_KEY
+    accessToken: API_KEY,
+    
   });
+
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
     "Light Map": lightmap,
@@ -98,7 +104,7 @@ function createMap(earthquakes) {
   // Create our map, giving it earthquakes layers to display on load
   var myMap = L.map("mapid", {
     center: [15.5994, -28.6731],
-    zoom: 2.5,
+    zoom: 3,
     layers: [lightmap, earthquakes]
   });
 
@@ -109,31 +115,38 @@ function createMap(earthquakes) {
     collapsed: false
   }).addTo(myMap);
 
+// Keep the earthquakes layer on top at all times when it is on
+myMap.on("overlayadd", function (event) {
+  earthquakes.bringToFront();
+});
+
 // Set up the legend
 var legend = L.control({ position: "bottomright" });
 
 // When the layer control is added, insert a div with the class of "legend"
-legend.onAdd = function() {
-  var div = L.DomUtil.create("div", "legend");
-  var labels = ['<strong>Depths:</strong>'];
+legend.onAdd = function(myMap) {
+  var div = L.DomUtil.create('div', 'info legend');
   var depth_categories = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
-  var depth_categories_color= [ 'LawnGreen', 'Yellow','Orange','DarkOrange', 'OrangeRed','red'];
-
-  //Add min & max
-  var legendInfo = `<h1>Depth</h1><div class="labels"><div class="min">${depth_categories[0]}</div><div class="max">${depth_categories[depth_categories.length - 1]}</div></div>`;
+  var labels = ['<strong>Depths:</strong>'];
+  for(var i = 0; i < depth_categories.length; i++) {
+    var color_text = depth_categories[i];
+    if( i == depth_categories.length - 1) {
+        color_text += "+";
+      }
+    //Add min & max
+  var legendInfo = `<h1>Earthquake Depth</h1><div class="labels"><div class="min">${depth_categories[0]}</div><div class="max">${depth_categories[depth_categories.length - 1]}</div></div>`;
 
   div.innerHTML = legendInfo;
-
+  
   limits.forEach((depth_categories, index) => {
-      labels.push("<li style=\"background-color: " + depth_categories_color[index] + "\"></li>");
+        labels.push(`<li style="background:${getColor(depth_categories[i])}"></li> ${color_text ? color_text : '+'}`);
     });
 
   div.innerHTML += "<ul>" + labels.join("") + "</ul>";
   return div;
-};
+  };
+  
 // Adding legend to the map
 legend.addTo(myMap);
 
-};
-
-
+}};
